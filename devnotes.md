@@ -13,6 +13,7 @@ Default is set to 0.
 
 # Mob Scaling
 * Armor seems easy. Try interfering with the mobSpawnEvent and seeing how the rates for armor are done already.
+* Creeper explosions? make them detonate faster and make a larger crater (and deal more damage)
 
 # Commands
 * Before building dungeons, we need commands to set a player's difficulty manually
