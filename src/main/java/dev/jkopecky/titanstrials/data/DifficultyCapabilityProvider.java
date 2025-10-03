@@ -1,0 +1,49 @@
+package dev.jkopecky.titanstrials.data;
+
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+public class DifficultyCapabilityProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+
+    public static Capability<DifficultyCapability> difficulty = CapabilityManager.get(new CapabilityToken<>() {});
+
+    private DifficultyCapability difficultyCapability = null;
+
+    private final LazyOptional<DifficultyCapability> optional = LazyOptional.of(this::createAttributes);
+
+    private DifficultyCapability createAttributes() {
+        if (this.difficultyCapability == null) {
+            this.difficultyCapability = new DifficultyCapability();
+        }
+        return this.difficultyCapability;
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (cap == difficulty) {
+            return optional.cast();
+        }
+        return LazyOptional.empty();
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        createAttributes().saveNBTData(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        createAttributes().loadNBTData(nbt);
+    }
+}
